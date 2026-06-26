@@ -1,0 +1,46 @@
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { UsersModule } from './users/users.module';
+import { RecipesModule } from './recipes/recipes.module';
+import { ConfigModule } from '@nestjs/config';
+import { WeatherModule } from './weather/weather.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ReqLogger } from './common/middleware/logger.middleware';
+import { LocationModule } from './location/location.module';
+import { CaloriesModule } from './calories/calories.module';
+
+@Module({
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        UsersModule,
+        RecipesModule,
+        WeatherModule,
+        TypeOrmModule.forRoot({
+            type: 'postgres',
+            host: 'localhost',
+            port: 5432,
+            password: 'postgres',
+            username: 'postgres',
+            database: 'nutrisimple',
+            autoLoadEntities: true,
+            synchronize: true,
+        }),
+        AuthModule,
+        JwtModule.register({
+            global: true,
+            secret: process.env.JWT_SECRET,
+        }),
+        LocationModule,
+        CaloriesModule,
+    ],
+    controllers: [],
+    providers: [],
+})
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(ReqLogger).forRoutes('*');
+    }
+}

@@ -1,0 +1,77 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserID } from 'src/common/types/userid.types';
+import { User } from './entities/users.entity';
+import { Latitude, Longitude } from 'src/common/types/geo.types';
+import { CalorieGoalDTO } from './dto/calorie-goal.dto';
+
+@Injectable()
+export class UsersService {
+    constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
+
+    async findByUsername(userName: string) {
+        return await this.usersRepository.findOne({
+            where: {
+                userName: userName,
+            },
+        });
+    }
+
+    async findByID(id: UserID) {
+        return await this.usersRepository.findOne({
+            where: {
+                id: id,
+            },
+        });
+    }
+
+    async createUser(userName: string, passwordHash: string) {
+        const newUser = this.usersRepository.create({
+            userName: userName,
+            passwordHash: passwordHash,
+        });
+
+        return await this.usersRepository.save(newUser);
+    }
+
+    async updateUserLocation(lat: Latitude, lon: Longitude, locationName: string, id: UserID) {
+        return await this.usersRepository.update(id, {
+            lat: lat,
+            lon: lon,
+            locationName: locationName,
+        });
+    }
+
+    async getUserLocation(id: UserID) {
+        const user = await this.findByID(id);
+
+        const { lat, lon, locationName } = user!;
+
+        return {
+            lat,
+            lon,
+            locationName,
+        };
+    }
+
+    async setUserCalorieGoal(calorieGoalDTO: CalorieGoalDTO, id: UserID) {
+        const { goal } = calorieGoalDTO;
+        const { affected } = await this.usersRepository.update(id, {
+            calorieGoal: goal,
+        });
+
+        return {
+            affected,
+        };
+    }
+    async getUserCalorieGoal(id: UserID) {
+        const user = await this.usersRepository.findOne({
+            where: {
+                id,
+            },
+        });
+
+        return user?.calorieGoal;
+    }
+}
