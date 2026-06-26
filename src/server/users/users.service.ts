@@ -1,10 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserID } from 'src/common/types/userid.types';
 import { User } from './entities/users.entity';
-import { Latitude, Longitude } from 'src/common/types/geo.types';
 import { CalorieGoalDTO } from './dto/calorie-goal.dto';
+import { UserID } from '../common/types/userid.types';
+import type { Latitude, Longitude } from '../common/types/geo.types';
 
 @Injectable()
 export class UsersService {

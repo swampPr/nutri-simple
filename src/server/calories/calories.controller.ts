@@ -2,8 +2,8 @@ import { Body, Controller, Get, ParseIntPipe, Post, Query, Req, UseGuards } from
 import { CaloriesService } from './calories.service';
 import { CaloriesDTO } from './dto/calories.dto';
 import type { Request } from 'express';
-import { UserID } from 'src/common/types/userid.types';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import { UserID } from '../common/types/userid.types';
 
 @Controller('calories')
 export class CaloriesController {

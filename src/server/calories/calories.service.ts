@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserID } from 'src/common/types/userid.types';
 import { UserCalories } from './entities/user-calories.entity';
 import { Between, Repository } from 'typeorm';
 import { CaloriesDTO } from './dto/calories.dto';
 import { CalorieHistoryDTO } from './dto/calorie-history.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
+import { UserID } from '../common/types/userid.types';
 
 @Injectable()
 export class CaloriesService {

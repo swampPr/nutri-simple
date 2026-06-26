@@ -1,6 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
 import { RegisterDTO } from './dto/register.dto';
 import { RegisterResponseDTO } from './dto/register-response.dto';
 import { LoginDTO } from './dto/login.dto';
@@ -9,9 +8,10 @@ import { JwtPayload } from './types/jwt-payload.type';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RefreshTokens } from './entities/refresh-token.entity';
 import { Repository } from 'typeorm';
-import { hashToken256 } from 'src/common/utils/hash-util';
 import { ConfigService } from '@nestjs/config';
-import { UserID } from 'src/common/types/userid.types';
+import { UsersService } from '../users/users.service';
+import { UserID } from '../common/types/userid.types';
+import { hashToken256 } from '../common/utils/hash-util';
 
 @Injectable()
 export class AuthService {

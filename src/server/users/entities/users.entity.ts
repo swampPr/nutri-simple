@@ -1,4 +1,4 @@
-import type { Latitude, Longitude } from 'src/common/types/geo.types';
+import type { Latitude, Longitude } from 'src/server/common/types/geo.types';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('users')

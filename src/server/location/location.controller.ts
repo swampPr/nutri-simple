@@ -1,10 +1,10 @@
 import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { LocationService } from './location.service';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { LocationDTO } from './dto/location.dto';
 import type { Request } from 'express';
-import type { Latitude, Longitude } from 'src/common/types/geo.types';
-import { UserID } from 'src/common/types/userid.types';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import type { Latitude, Longitude } from '../common/types/geo.types';
+import { UserID } from '../common/types/userid.types';
 
 @Controller('location')
 export class LocationController {

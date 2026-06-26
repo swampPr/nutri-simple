@@ -1,5 +1,5 @@
 import { IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import type { Latitude, Longitude } from 'src/common/types/geo.types';
+import type { Latitude, Longitude } from 'src/server/common/types/geo.types';
 
 export class LocationDTO {
     @IsNotEmpty()

@@ -1,9 +1,9 @@
 import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
 import { WeatherService } from './weather.service';
-import type { Latitude, Longitude } from 'src/common/types/geo.types';
-import { UserID } from 'src/common/types/userid.types';
 import type { Request } from 'express';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import { UserID } from '../common/types/userid.types';
+import type { Latitude, Longitude } from '../common/types/geo.types';
 
 @Controller('weather')
 export class WeatherController {

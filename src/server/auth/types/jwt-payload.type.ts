@@ -1,4 +1,4 @@
-import { UserID } from 'src/common/types/userid.types';
+import { UserID } from 'src/server/common/types/userid.types';
 
 export type JwtPayload = {
     sub: UserID;

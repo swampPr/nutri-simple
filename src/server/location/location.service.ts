@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { createGeoApifyURL } from './utils/api-key-util';
 import type { Location, LocationResponse } from './types/location-response.type';
 import { LocationDTO } from './dto/location.dto';
-import type { Latitude, Longitude } from 'src/common/types/geo.types';
-import { UserID } from 'src/common/types/userid.types';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
+import { UserID } from '../common/types/userid.types';
+import { Latitude, Longitude } from '../common/types/geo.types';
 
 @Injectable()
 export class LocationService {

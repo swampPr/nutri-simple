@@ -1,4 +1,4 @@
-import { Latitude, Longitude } from 'src/common/types/geo.types';
+import type { Latitude, Longitude } from 'src/server/common/types/geo.types';
 
 export type LocationResponse = {
     features: Location[];

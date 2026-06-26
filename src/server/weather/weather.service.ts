@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Latitude, Longitude } from 'src/common/types/geo.types';
 import { createPirateWeatherURL } from './utils/api-key-util';
 import { ForecastResponse } from './types/forecast-response.type';
-import { UsersService } from 'src/users/users.service';
-import { UserID } from 'src/common/types/userid.types';
 import { UserForecast as UserForecastDTO } from './dto/user-forecast.dto';
 import { WeatherScoringObj } from './types/weather-scoring.type';
+import { Latitude, Longitude } from '../common/types/geo.types';
+import { UsersService } from '../users/users.service';
+import { UserID } from '../common/types/userid.types';
 
 @Injectable()
 export class WeatherService {

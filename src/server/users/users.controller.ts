@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import { UsersService } from './users.service';
-import { UserID } from 'src/common/types/userid.types';
 import type { Request } from 'express';
 import { CalorieGoalDTO } from './dto/calorie-goal.dto';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import { UserID } from '../common/types/userid.types';
 
 @Controller('users')
 export class UsersControllers {

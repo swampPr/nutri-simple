@@ -12,10 +12,11 @@ import {
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { RecipeNutrientsDTO } from './dto/recipe-nutrients.dto';
-import { AccessTokenGuard } from 'src/auth/guards/access-token.guard';
 import type { Request } from 'express';
 import type { UserRecipes } from './entities/user-recipes.entity';
 import { RecipeIngredientsDTO } from './dto/recipe-ingredients.dto';
+import { AccessTokenGuard } from '../auth/guards/access-token.guard';
+import { UserID } from '../common/types/userid.types';
 
 @Controller('recipes')
 export class RecipesController {
@@ -39,7 +40,7 @@ export class RecipesController {
         @Param('id', ParseIntPipe) recipeID: number,
         @Req() req: Request
     ): Promise<UserRecipes> {
-        const { userId } = req.user! as { userId: number };
+        const { userId } = req.user! as { userId: UserID };
         return await this.recipesService.saveRecipe(recipeID, userId);
     }
 

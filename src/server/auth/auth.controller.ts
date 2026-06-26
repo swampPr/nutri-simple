@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import type { Request, Response } from 'express';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
-import { UserID } from 'src/common/types/userid.types';
+import { UserID } from '../common/types/userid.types';
 
 @Controller('auth')
 export class AuthController {

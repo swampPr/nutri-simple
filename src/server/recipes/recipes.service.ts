@@ -5,7 +5,6 @@ import { formatShoppingList } from './utils/shopping-list-util';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRecipes } from './entities/user-recipes.entity';
 import { Repository } from 'typeorm';
-import { UserID } from 'src/common/types/userid.types';
 import type { BasicRecipe, SavedRecipe } from './types/recipe.type';
 import { RecipeIngredientsDTO } from './dto/recipe-ingredients.dto';
 import { ShoppingListDTO } from './dto/shopping-list.dto';
@@ -13,6 +12,7 @@ import { createSpoonURL } from './utils/api-key-util';
 import { UserRecipeNutrientsDTO } from './dto/user-nutrient-recipes.dto';
 import { RecipeAutocompleteDTO, RecipeAutocompleteItem } from './dto/recipe-autocomplete.dto';
 import { RecipeSearchDTO } from './dto/recipe-search.dto';
+import { UserID } from '../common/types/userid.types';
 
 @Injectable()
 export class RecipesService {

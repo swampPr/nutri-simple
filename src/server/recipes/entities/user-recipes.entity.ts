@@ -1,4 +1,3 @@
-import { User } from 'src/users/entities/users.entity';
 import {
     Column,
     CreateDateColumn,
@@ -8,6 +7,7 @@ import {
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import type { SavedRecipe } from '../types/recipe.type';
+import { User } from 'src/server/users/entities/users.entity';
 
 @Entity('user_recipes')
 export class UserRecipes {
