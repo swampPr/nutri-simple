@@ -13,7 +13,7 @@ export class UsersService {
     async findByUsername(userName: string) {
         return await this.usersRepository.findOne({
             where: {
-                userName: userName,
+                userName,
             },
         });
     }
@@ -21,15 +21,15 @@ export class UsersService {
     async findByID(id: UserID) {
         return await this.usersRepository.findOne({
             where: {
-                id: id,
+                id,
             },
         });
     }
 
     async createUser(userName: string, passwordHash: string) {
         const newUser = this.usersRepository.create({
-            userName: userName,
-            passwordHash: passwordHash,
+            userName,
+            passwordHash,
         });
 
         return await this.usersRepository.save(newUser);
@@ -37,9 +37,9 @@ export class UsersService {
 
     async updateUserLocation(lat: Latitude, lon: Longitude, locationName: string, id: UserID) {
         return await this.usersRepository.update(id, {
-            lat: lat,
-            lon: lon,
-            locationName: locationName,
+            lat,
+            lon,
+            locationName,
         });
     }
 
