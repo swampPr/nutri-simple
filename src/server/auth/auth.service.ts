@@ -107,4 +107,8 @@ export class AuthService {
             accessToken,
         };
     }
+
+    async validateRefreshToken(token: string) {
+        return await this.jwtService.verifyAsync(token);
+    }
 }

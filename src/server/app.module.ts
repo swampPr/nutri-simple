@@ -9,11 +9,18 @@ import { JwtModule } from '@nestjs/jwt';
 import { ReqLogger } from './common/middleware/logger.middleware';
 import { LocationModule } from './location/location.module';
 import { CaloriesModule } from './calories/calories.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { AppController } from './app.controllers';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+        }),
+        ServeStaticModule.forRoot({
+            rootPath: join(process.cwd(), 'src', 'public'),
+            exclude: ['/'],
         }),
         UsersModule,
         RecipesModule,
@@ -36,7 +43,7 @@ import { CaloriesModule } from './calories/calories.module';
         LocationModule,
         CaloriesModule,
     ],
-    controllers: [],
+    controllers: [AppController],
     providers: [],
 })
 export class AppModule implements NestModule {
