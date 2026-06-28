@@ -12,6 +12,7 @@ import { CaloriesModule } from './calories/calories.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controllers';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
     imports: [
@@ -21,6 +22,9 @@ import { AppController } from './app.controllers';
         ServeStaticModule.forRoot({
             rootPath: join(process.cwd(), 'src', 'public'),
             exclude: ['/'],
+        }),
+        CacheModule.register({
+            isGlobal: true,
         }),
         UsersModule,
         RecipesModule,

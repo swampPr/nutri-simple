@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { createPirateWeatherURL } from './utils/api-key-util';
 import { ForecastResponse } from './types/forecast-response.type';
 import { UserForecast as UserForecastDTO } from './dto/user-forecast.dto';
@@ -6,11 +6,18 @@ import { WeatherScoringObj } from './types/weather-scoring.type';
 import { Latitude, Longitude } from '../common/types/geo.types';
 import { UsersService } from '../users/users.service';
 import { UserID } from '../common/types/userid.types';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
+import { FIVE_HOUR_MS } from '../common/constants/5-hour-ms';
 
 @Injectable()
 export class WeatherService {
-    constructor(private usersService: UsersService) {}
-    async fetchForecast(lat: Latitude, lon: Longitude) {
+    constructor(
+        private usersService: UsersService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
+    ) {}
+
+    async fetchForecast(lat: Latitude, lon: Longitude): Promise<ForecastResponse> {
         const url = createPirateWeatherURL('https://api.pirateweather.net/forecast/');
 
         const res = await fetch(`${url.toString()}/${lat},${lon}?units=ca`, {
@@ -23,9 +30,13 @@ export class WeatherService {
         return (await res.json()) as ForecastResponse;
     }
 
-    async getForecast(lat: Latitude, lon: Longitude, id: UserID): Promise<any> {
-        const forecast = await this.fetchForecast(lat, lon);
+    async getForecast(lat: Latitude, lon: Longitude, id: UserID): Promise<UserForecastDTO> {
+        const forecast: ForecastResponse = await this.fetchForecast(lat, lon);
         const { locationName } = await this.usersService.getUserLocation(id);
+
+        const cacheKey = `weather:${locationName}`;
+        const forecastCache: UserForecastDTO | undefined = await this.cacheManager.get(cacheKey);
+        if (forecastCache) return forecastCache;
 
         const userForecast: UserForecastDTO = {
             locationName: locationName!,
@@ -56,6 +67,7 @@ export class WeatherService {
             });
         }
 
+        await this.cacheManager.set(cacheKey, userForecast, FIVE_HOUR_MS);
         return userForecast;
     }
 
