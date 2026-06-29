@@ -1,8 +1,9 @@
 /* ====================================================
-   NutriSimple — Login (page-specific)
+   NutriSimple — Register (page-specific)
 
    Everything shared with other auth pages lives in
    /common/shared.css, loaded before this file. Anything
-   added here only applies to the login page, and can
-   override shared.css if it ever needs to.
+   added here only applies to the register page — e.g. if
+   a confirm-password field or terms checkbox shows up
+   later, its styling goes here, not in shared.css.
 ==================================================== */

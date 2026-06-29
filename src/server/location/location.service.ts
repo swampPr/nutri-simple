@@ -1,14 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { createGeoApifyURL } from './utils/api-key-util';
 import type { Location, LocationResponse } from './types/location-response.type';
 import { LocationDTO } from './dto/location.dto';
 import { UsersService } from '../users/users.service';
 import { UserID } from '../common/types/userid.types';
-import { Latitude, Longitude } from '../common/types/geo.types';
+import type { Latitude, Longitude } from '../common/types/geo.types';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { FIVE_HOUR_MS } from '../common/constants/5-hour-ms';
+import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class LocationService {
-    constructor(private usersService: UsersService) {}
+    constructor(
+        private usersService: UsersService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
+    ) {}
 
     async getAutocomplete(q: string) {
         const url = createGeoApifyURL('https://api.geoapify.com/v1/geocode/autocomplete');
@@ -31,9 +37,13 @@ export class LocationService {
         return countryOptions;
     }
 
-    async geocodeUser(q: string, userId: UserID) {
+    async geocodeUser(q: string, userId: UserID): Promise<LocationDTO> {
         const url = createGeoApifyURL('https://api.geoapify.com/v1/geocode/search');
         url.searchParams.set('text', q);
+
+        const cacheKey = `location:${q}`;
+        const locationCache: LocationDTO | undefined = await this.cacheManager.get(cacheKey);
+        if (locationCache) return locationCache;
 
         const res = await fetch(url.toString(), {
             headers: {
@@ -60,9 +70,13 @@ export class LocationService {
             userId
         );
 
-        if (!location.properties.city) return locationDTO;
+        if (!location.properties.city) {
+            await this.cacheManager.set(cacheKey, locationDTO, FIVE_HOUR_MS);
+            return locationDTO;
+        }
 
         locationDTO.city = location.properties.city;
+        await this.cacheManager.set(cacheKey, locationDTO, FIVE_HOUR_MS);
         return locationDTO;
     }
 

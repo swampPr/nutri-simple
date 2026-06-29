@@ -4,8 +4,9 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/common/shared.css" />
-        <link rel="stylesheet" href="/login/style.css" />
-        <!-- Google Fonts: Lexend for the wordmark/headings, Roboto Flex for body/UI text -->
+        <link rel="stylesheet" href="/common/auth.css" />
+        <link rel="stylesheet" href="/register/style.css" />
+        <!-- Google Fonts: Lexend for headings, Roboto Flex for body/UI text -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -15,44 +16,40 @@
         <link
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
             rel="stylesheet" />
-        <script src="/login/app.js" defer></script>
-        <title>Login · NutriSimple</title>
+        <script src="/register/app.js" defer></script>
+        <title>Register · NutriSimple</title>
     </head>
     <body>
         <header>
             <span class="material-symbols-rounded header-icon" aria-hidden="true">favorite</span>
-            <h2 id="header-title">NutriSimple</h2>
+            <h2>NutriSimple</h2>
         </header>
+
         <section>
             <div class="auth-blob" aria-hidden="true"></div>
 
             <div class="auth-card">
-                <h3>Welcome back</h3>
+                <h3>Create your account</h3>
                 <br />
-                <p class="error-message" id="login-error" role="alert"></p>
-                <form id="login-form" action="/auth/login" method="post">
+                <p class="error-message" id="register-error" role="alert"></p>
+
+                <form action="/auth/register" method="post" id="register-form">
                     <div class="field">
                         <span class="material-symbols-rounded field-icon" aria-hidden="true"
                             >person</span
                         >
-                        <input
-                            type="text"
-                            id="username"
-                            minlength="4"
-                            name="userName"
-                            required
-                            placeholder=" " />
+                        <input type="text" id="username" name="userName" required placeholder=" " />
                         <label for="username">Username</label>
                     </div>
-                    <div class="field">
+
+                    <div class="field field--password">
                         <span class="material-symbols-rounded field-icon" aria-hidden="true"
                             >lock</span
                         >
                         <input
                             type="password"
-                            id="password"
-                            minlength="6"
                             name="password"
+                            id="password"
                             required
                             placeholder=" " />
                         <label for="password">Password</label>
@@ -66,7 +63,8 @@
                             >
                         </button>
                     </div>
-                    <div><input type="submit" value="Log in" /></div>
+
+                    <div><input type="submit" value="Register" /></div>
                 </form>
             </div>
         </section>

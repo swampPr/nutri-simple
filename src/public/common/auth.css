@@ -1,0 +1,309 @@
+/*
+====================================================
+   NutriSimple — Shared auth styles
+   Dark theme, Material You inspired
+
+   Used by every auth page (login, register, ...).
+   Page-specific tweaks belong in that page's own
+   style.css, loaded *after* this file, so they can
+   override anything here if a page ever needs to.
+==================================================== 
+*/
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* ---------- Material Symbols icon base ---------- */
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ---------- Design tokens ---------- */
+:root {
+    --bg: #12150f;
+    --surface: #1b1f15;
+    --surface-high: #242a1b;
+    --primary: #a8d480;
+    --on-primary: #1b3409;
+    --outline: #44483a;
+    --text-high: #e5e8da;
+    --text-low: #a2a695;
+    --accent-warm: #ffb680;
+    --error: #ffb4ab;
+
+    --radius-lg: 28px;
+    --radius-sm: 6px;
+
+    --font-display: 'Lexend', sans-serif;
+    --font-body: 'Roboto Flex', sans-serif;
+}
+
+/* ---------- Page shell ---------- */
+body {
+    background: var(--bg);
+    color: var(--text-high);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 24px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-icon {
+    color: var(--primary);
+    font-size: 26px;
+}
+
+header h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.2px;
+    margin: 0;
+    color: var(--text-high);
+}
+
+/* ---------- Auth section + ambient color blob ---------- */
+section {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+}
+
+.auth-blob {
+    position: absolute;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+    opacity: 0.18;
+    filter: blur(60px);
+    border-radius: 50%;
+    animation: breathe 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes breathe {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.18;
+    }
+    50% {
+        transform: scale(1.12);
+        opacity: 0.26;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .auth-blob {
+        animation: none;
+    }
+}
+
+/* ---------- Card ---------- */
+.auth-card {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.auth-card h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--text-high);
+}
+
+.auth-card .auth-subtitle {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--text-low);
+}
+
+.auth-card .error-message {
+    font-size: 13px;
+    color: var(--error);
+    margin: 0 0 16px;
+}
+
+.auth-card .error-message:empty {
+    display: none;
+}
+
+/* ---------- Fields ---------- */
+.auth-card .field {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.auth-card .field-icon {
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    color: var(--text-low);
+    font-size: 20px;
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.auth-card .field input {
+    width: 100%;
+    background: var(--surface-high);
+    border: none;
+    border-bottom: 2px solid var(--outline);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    color: var(--text-high);
+    font-family: var(--font-body);
+    font-size: 15px;
+    padding: 22px 14px 8px 44px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.auth-card .field input::placeholder {
+    color: transparent;
+}
+
+.auth-card .field--password input {
+    padding-right: 44px;
+}
+
+.auth-card .field label {
+    position: absolute;
+    left: 44px;
+    top: 17px;
+    font-size: 15px;
+    color: var(--text-low);
+    pointer-events: none;
+    transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
+}
+
+.auth-card .field input:focus,
+.auth-card .field input:not(:placeholder-shown) {
+    border-bottom-color: var(--primary);
+}
+
+.auth-card .field input:focus + label,
+.auth-card .field input:not(:placeholder-shown) + label {
+    top: 8px;
+    font-size: 11px;
+    color: var(--primary);
+}
+
+.auth-card .field:focus-within .field-icon {
+    color: var(--primary);
+}
+
+.auth-card .field input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Password visibility toggle ---------- */
+.auth-card .toggle-password {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    color: var(--text-low);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.auth-card .toggle-password .material-symbols-rounded {
+    font-size: 20px;
+}
+
+.auth-card .toggle-password:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.auth-card .toggle-password:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* ---------- Submit button — M3 filled, pill-shaped ---------- */
+.auth-card input[type='submit'] {
+    width: 100%;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    border-radius: 100px;
+    padding: 14px 0;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.auth-card input[type='submit']:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 4px 16px rgba(168, 212, 128, 0.3);
+}
+
+.auth-card input[type='submit']:active {
+    transform: scale(0.98);
+}
+
+.auth-card input[type='submit']:focus-visible {
+    outline: 2px solid var(--text-high);
+    outline-offset: 3px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 420px) {
+    .auth-card {
+        padding: 28px 22px;
+    }
+    .auth-blob {
+        width: 380px;
+        height: 380px;
+    }
+}
