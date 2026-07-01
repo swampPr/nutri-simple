@@ -7,6 +7,7 @@ import {
     ParseIntPipe,
     Post,
     Query,
+    Redirect,
     Req,
     UseGuards,
 } from '@nestjs/common';
@@ -23,6 +24,7 @@ export class RecipesController {
     constructor(private recipesService: RecipesService) {}
 
     @Post('/get-by-nutrients')
+    @Redirect('/notfound', 404)
     @UseGuards(AccessTokenGuard)
     async getByNutrients(@Body() recipeNutrientsDTO: RecipeNutrientsDTO) {
         return await this.recipesService.getByNutrients(recipeNutrientsDTO);

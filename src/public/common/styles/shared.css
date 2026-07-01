@@ -1,0 +1,94 @@
+/* ====================================================
+   NutriSimple — Shared base styles
+   Used by EVERY page in the app: login, register,
+   dashboard, 404, all of it.
+
+   This is just the design tokens, the reset, the icon
+   font setup, and the header — things every page needs
+   regardless of what that page's layout looks like.
+
+   Pages with the centered-card look (login, register)
+   also load /common/auth.css after this file. Pages
+   that don't (dashboard, 404) skip it and just add
+   their own style.css after this one.
+==================================================== */
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* ---------- Material Symbols icon base ---------- */
+.material-symbols-rounded {
+    font-family: 'Material Symbols Rounded';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* ---------- Design tokens ---------- */
+:root {
+    --bg: #12150f;
+    --surface: #1b1f15;
+    --surface-high: #242a1b;
+    --primary: #a8d480;
+    --on-primary: #1b3409;
+    --outline: #44483a;
+    --text-high: #e5e8da;
+    --text-low: #a2a695;
+    --accent-warm: #ffb680;
+    --error: #ffb4ab;
+
+    --radius-lg: 28px;
+    --radius-sm: 6px;
+
+    --font-display: 'Lexend', sans-serif;
+    --font-body: 'Roboto Flex', sans-serif;
+}
+
+/* ---------- Page shell ---------- */
+body {
+    background: var(--bg);
+    color: var(--text-high);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Header — appears on every page ---------- */
+header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 24px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-icon {
+    color: var(--primary);
+    font-size: 26px;
+}
+
+header h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.2px;
+    margin: 0;
+    color: var(--text-high);
+}

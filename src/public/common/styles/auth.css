@@ -1,95 +1,16 @@
-/*
-====================================================
-   NutriSimple — Shared auth styles
-   Dark theme, Material You inspired
+/* ====================================================
+   NutriSimple — Auth pages (login, register, ...)
 
-   Used by every auth page (login, register, ...).
-   Page-specific tweaks belong in that page's own
-   style.css, loaded *after* this file, so they can
-   override anything here if a page ever needs to.
-==================================================== 
-*/
+   Loaded after shared.css, and only on pages that use
+   the centered-card look: the ambient blob, the card
+   itself, the floating-label field component, the
+   password toggle, and the pill submit button.
 
-/* ---------- Reset ---------- */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+   Dashboard, 404, and anything else that isn't a single
+   centered form should NOT load this file.
+==================================================== */
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-/* ---------- Material Symbols icon base ---------- */
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    display: inline-block;
-    -webkit-font-smoothing: antialiased;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
-/* ---------- Design tokens ---------- */
-:root {
-    --bg: #12150f;
-    --surface: #1b1f15;
-    --surface-high: #242a1b;
-    --primary: #a8d480;
-    --on-primary: #1b3409;
-    --outline: #44483a;
-    --text-high: #e5e8da;
-    --text-low: #a2a695;
-    --accent-warm: #ffb680;
-    --error: #ffb4ab;
-
-    --radius-lg: 28px;
-    --radius-sm: 6px;
-
-    --font-display: 'Lexend', sans-serif;
-    --font-body: 'Roboto Flex', sans-serif;
-}
-
-/* ---------- Page shell ---------- */
-body {
-    background: var(--bg);
-    color: var(--text-high);
-    font-family: var(--font-body);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 20px 24px;
-    flex-shrink: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.header-icon {
-    color: var(--primary);
-    font-size: 26px;
-}
-
-header h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 22px;
-    letter-spacing: 0.2px;
-    margin: 0;
-    color: var(--text-high);
-}
-
-/* ---------- Auth section + ambient color blob ---------- */
+/* ---------- Centering layout ---------- */
 section {
     position: relative;
     flex: 1;
@@ -100,6 +21,7 @@ section {
     overflow: hidden;
 }
 
+/* ---------- Ambient color blob ---------- */
 .auth-blob {
     position: absolute;
     width: 520px;
