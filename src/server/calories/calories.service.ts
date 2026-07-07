@@ -44,7 +44,22 @@ export class CaloriesService {
 
         const calorieGoal = await this.usersService.getUserCalorieGoal(id);
         if (!calorieGoal)
-            throw new BadRequestException('Must set a calorie goal before viewing calorie progres');
+            throw new BadRequestException(
+                'Must set a calorie goal before viewing calorie progress'
+            );
+
+        if (calorieHistory.length === 0) {
+            const calorieHistoryDTO: CalorieHistoryDTO = {
+                calorieHistory: [
+                    {
+                        calories: 0,
+                        calorieGoal,
+                        day: '',
+                    },
+                ],
+            };
+            return calorieHistoryDTO;
+        }
 
         const calorieHistoryDTO: CalorieHistoryDTO = {
             calorieHistory: calorieHistory.map((item) => {

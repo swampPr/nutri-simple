@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { RequestMethod } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { ConfigModule } from '@nestjs/config';
@@ -52,6 +53,9 @@ import { CacheModule } from '@nestjs/cache-manager';
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
-        consumer.apply(ReqLogger).forRoutes('*');
+        consumer.apply(ReqLogger).forRoutes({
+            path: '*',
+            method: RequestMethod.ALL,
+        });
     }
 }

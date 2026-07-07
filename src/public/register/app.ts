@@ -1,6 +1,6 @@
 import { ConflictExceptionResponse } from '../common/types/exceptions';
+import { showErrMsg } from '../common/utils/set-error.js';
 import { RegisteredUser } from '../common/types/user';
-import { showErrMsg } from '../common/utils/set-error';
 
 const toggleBtn = document.getElementById('toggle-password') as HTMLButtonElement | null;
 const passwordInput = document.getElementById('password') as HTMLInputElement | null;
@@ -19,6 +19,7 @@ form?.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
+            method: 'POST',
             body: JSON.stringify({
                 userName: formData.get('userName'),
                 password: formData.get('password'),

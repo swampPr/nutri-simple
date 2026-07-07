@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { createPirateWeatherURL } from './utils/api-key-util';
 import { ForecastResponse } from './types/forecast-response.type';
-import { UserForecast as UserForecastDTO } from './dto/user-forecast.dto';
+import { UserForecastDTO } from './dto/user-forecast.dto';
 import { WeatherScoringObj } from './types/weather-scoring.type';
 import { Latitude, Longitude } from '../common/types/geo.types';
 import { UsersService } from '../users/users.service';
 import { UserID } from '../common/types/userid.types';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import type { Cache } from 'cache-manager';
-import { FIVE_HOUR_MS } from '../common/constants/5-hour-ms';
+import { THIRTY_MIN_MS } from '../common/constants/thirty-min-ms';
 
 @Injectable()
 export class WeatherService {
@@ -20,23 +20,34 @@ export class WeatherService {
     async fetchForecast(lat: Latitude, lon: Longitude): Promise<ForecastResponse> {
         const url = createPirateWeatherURL('https://api.pirateweather.net/forecast/');
 
-        const res = await fetch(`${url.toString()}/${lat},${lon}?units=ca`, {
-            headers: {
-                Accept: 'application/json',
-                apikey: process.env.PIRATE_WEATHER_KEY!,
-            },
-        });
+        const res = await fetch(
+            `${url.toString()}/${lat},${lon}?units=ca&exclude=minutely&version=2`,
+            {
+                headers: {
+                    Accept: 'application/json',
+                    apikey: process.env.PIRATE_WEATHER_KEY!,
+                },
+            }
+        );
 
         return (await res.json()) as ForecastResponse;
     }
 
-    async getForecast(lat: Latitude, lon: Longitude, id: UserID): Promise<UserForecastDTO> {
-        const forecast: ForecastResponse = await this.fetchForecast(lat, lon);
-        const { locationName } = await this.usersService.getUserLocation(id);
-
+    async getForecast(
+        lat: Latitude,
+        lon: Longitude,
+        id: UserID,
+        cache: 'true' | undefined
+    ): Promise<UserForecastDTO> {
+        const user = await this.usersService.getUserLocation(id);
+        const locationName = user!.locationName;
         const cacheKey = `weather:${locationName}`;
-        const forecastCache: UserForecastDTO | undefined = await this.cacheManager.get(cacheKey);
-        if (forecastCache) return forecastCache;
+        if (cache) {
+            const forecastCache: UserForecastDTO | undefined =
+                await this.cacheManager.get(cacheKey);
+            if (forecastCache) return forecastCache;
+        }
+        const forecast: ForecastResponse = await this.fetchForecast(lat, lon);
 
         const userForecast: UserForecastDTO = {
             locationName: locationName!,
@@ -44,6 +55,7 @@ export class WeatherService {
             currently: {
                 time: forecast.currently.time,
                 summary: forecast.currently.summary,
+                icon: forecast.currently.icon,
                 precipProbability: forecast.currently.precipProbability,
                 temperature: forecast.currently.temperature,
                 apparentTemperature: forecast.currently.apparentTemperature,
@@ -54,6 +66,7 @@ export class WeatherService {
                 runningScore: 0,
             },
             next3HoursSummary: [],
+            alerts: forecast.alerts,
         };
         const runningScore = this.getRunningScore(userForecast);
         userForecast.currently.runningScore = runningScore;
@@ -62,12 +75,14 @@ export class WeatherService {
             userForecast.next3HoursSummary.push({
                 time: forecast.hourly.data[i].time,
                 precipProbability: forecast.hourly.data[i].precipProbability,
+                icon: forecast.hourly.data[i].icon,
                 temperature: forecast.hourly.data[i].temperature,
                 humidity: forecast.hourly.data[i].humidity,
             });
         }
 
-        await this.cacheManager.set(cacheKey, userForecast, FIVE_HOUR_MS);
+        await this.cacheManager.set(cacheKey, userForecast, THIRTY_MIN_MS);
+
         return userForecast;
     }
 

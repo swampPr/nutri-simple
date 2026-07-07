@@ -29,6 +29,11 @@ export class LocationService {
         const responseJson = (await res.json()) as LocationResponse;
 
         const countryOptions = responseJson.features.map((country: Location) => {
+            if (country.properties.city && !country.properties.state)
+                return { name: country.properties.formatted };
+            else if (!country.properties.city && !country.properties.state)
+                return { name: country.properties.formatted };
+
             return {
                 name: `${country.properties.city ? country.properties.city + ', ' : ''}${country.properties.state}, ${country.properties.country}`,
             };
@@ -57,11 +62,12 @@ export class LocationService {
 
         const locationDTO: LocationDTO = {
             country: location.properties.country,
-            state: location.properties.state,
             lat: location.properties.lat,
             lon: location.properties.lon,
             displayName: `${location.properties.city ? location.properties.city + ', ' : ''}${location.properties.state}, ${location.properties.country}`,
         };
+
+        if (!location.properties.state) locationDTO.displayName = location.properties.formatted;
 
         await this.usersService.updateUserLocation(
             locationDTO.lat,
@@ -70,11 +76,12 @@ export class LocationService {
             userId
         );
 
-        if (!location.properties.city) {
+        if (!location.properties.city || !location.properties.state) {
             await this.cacheManager.set(cacheKey, locationDTO, FIVE_HOUR_MS);
             return locationDTO;
         }
 
+        locationDTO.state = location.properties.state;
         locationDTO.city = location.properties.city;
         await this.cacheManager.set(cacheKey, locationDTO, FIVE_HOUR_MS);
         return locationDTO;
@@ -97,11 +104,11 @@ export class LocationService {
 
         const locationDTO: LocationDTO = {
             country: location.properties.country,
-            state: location.properties.state,
             lat: location.properties.lat,
             lon: location.properties.lon,
             displayName: `${location.properties.city ? location.properties.city + ', ' : ''}${location.properties.state}, ${location.properties.country}`,
         };
+        if (!location.properties.state) locationDTO.displayName = location.properties.formatted;
 
         await this.usersService.updateUserLocation(
             locationDTO.lat,
@@ -110,8 +117,9 @@ export class LocationService {
             userId
         );
 
-        if (!location.properties.city) return locationDTO;
+        if (!location.properties.city || !location.properties.state) return locationDTO;
 
+        locationDTO.state = location.properties.state;
         locationDTO.city = location.properties.city;
         return locationDTO;
     }

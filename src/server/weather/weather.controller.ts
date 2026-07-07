@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Headers, Query, Req, UseGuards } from '@nestjs/common';
 import { WeatherService } from './weather.service';
 import type { Request } from 'express';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
@@ -14,9 +14,10 @@ export class WeatherController {
     async getUserForecast(
         @Query('lat') lat: Latitude,
         @Query('lon') lon: Longitude,
-        @Req() req: Request
+        @Req() req: Request,
+        @Headers('X-Cache') cache: 'true' | undefined
     ) {
         const { userId } = req.user! as { userId: UserID };
-        return this.weatherService.getForecast(lat, lon, userId);
+        return this.weatherService.getForecast(lat, lon, userId, cache);
     }
 }

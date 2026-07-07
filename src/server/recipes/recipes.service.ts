@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { RecipeNutrientsDTO } from './dto/recipe-nutrients.dto';
 import { RecipeInfoResponse } from './types/recipe.type';
 import { formatShoppingList } from './utils/shopping-list-util';
@@ -28,6 +28,7 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const recipes = (await response.json()).map((recipe: RecipeAutocompleteItem) => {
             return {
@@ -45,7 +46,7 @@ export class RecipesService {
     async getRecipeSearch(q: string) {
         const url = createSpoonURL('https://api.spoonacular.com/recipes/complexSearch');
         url.searchParams.set('query', q);
-        url.searchParams.set('number', '10');
+        url.searchParams.set('number', '50');
 
         const response = await fetch(url, {
             headers: {
@@ -54,6 +55,8 @@ export class RecipesService {
         });
 
         const responseJson = await response.json();
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
+
         const recipes = responseJson.results.map((recipe: BasicRecipe) => {
             return {
                 id: recipe.id,
@@ -83,6 +86,7 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const userNutrientRecipes: UserRecipeNutrientsDTO = {
             recipes: await response.json(),
@@ -100,19 +104,24 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         return await response.json();
     }
 
-    async saveRecipe(recipeID: number, id: UserID): Promise<UserRecipes> {
+    async saveRecipe(recipeID: number, id: UserID) {
         const recipeInfo: SavedRecipe = await this.getRecipeInfo(recipeID);
 
-        const newRecipe: UserRecipes = this.userRecipesRepo.create({
-            user: { id },
-            recipe: recipeInfo,
-        });
-
-        return await this.userRecipesRepo.save(newRecipe);
+        return await this.userRecipesRepo.upsert(
+            {
+                user: { id },
+                recipe: recipeInfo,
+                recipeId: recipeInfo.id,
+            },
+            {
+                conflictPaths: ['recipeId', 'user'],
+            }
+        );
     }
 
     async getRecipeInfo(recipeID: number): Promise<SavedRecipe> {
@@ -124,6 +133,7 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const recipeResponseObj = (await response.json()) as RecipeInfoResponse;
 
@@ -162,6 +172,22 @@ export class RecipesService {
         return recipeInfo;
     }
 
+    async getSavedRecipes(id: UserID) {
+        const userRecipes = await this.userRecipesRepo.find({
+            where: {
+                user: { id },
+            },
+        });
+
+        if (userRecipes.length === 0) return [];
+
+        return userRecipes.map((recipe) => {
+            return {
+                ...recipe.recipe,
+            };
+        });
+    }
+
     async generateShoppingList(recipeIds: number[]) {
         const url = createSpoonURL('https://api.spoonacular.com/recipes/informationBulk');
         url.searchParams.set('ids', recipeIds.toString());
@@ -170,6 +196,7 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+        if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const recipesInfoArr = (await response.json()) as RecipeInfoResponse[];
         let shoppingList: ShoppingListDTO = { list: [] };

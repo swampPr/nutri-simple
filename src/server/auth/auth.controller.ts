@@ -6,6 +6,7 @@ import { LoginDTO } from './dto/login.dto';
 import type { Request, Response } from 'express';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { UserID } from '../common/types/userid.types';
+import { SEVEN_DAY_MS } from '../common/constants/7-day-ms';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,7 @@ export class AuthController {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
+            maxAge: SEVEN_DAY_MS,
         });
 
         return {

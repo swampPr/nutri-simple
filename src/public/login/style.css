@@ -6,3 +6,33 @@
    added here only applies to the login page, and can
    override shared.css if it ever needs to.
 ==================================================== */
+
+/* ---------- Header register link ---------- */
+#register-link {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border: 1px solid var(--primary);
+    border-radius: 100px;
+    background: var(--primary);
+    color: var(--on-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+#register-link:hover {
+    background: transparent;
+    color: var(--text-high);
+    border-color: var(--primary);
+}
+
+#register-link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}

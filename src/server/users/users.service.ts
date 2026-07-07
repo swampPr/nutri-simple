@@ -45,6 +45,7 @@ export class UsersService {
 
     async getUserLocation(id: UserID) {
         const user = await this.findByID(id);
+        if (!user) return null;
 
         const { lat, lon, locationName } = user!;
 

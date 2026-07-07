@@ -7,24 +7,22 @@ import {
     ParseIntPipe,
     Post,
     Query,
-    Redirect,
     Req,
     UseGuards,
 } from '@nestjs/common';
 import { RecipesService } from './recipes.service';
 import { RecipeNutrientsDTO } from './dto/recipe-nutrients.dto';
 import type { Request } from 'express';
-import type { UserRecipes } from './entities/user-recipes.entity';
 import { RecipeIngredientsDTO } from './dto/recipe-ingredients.dto';
 import { AccessTokenGuard } from '../auth/guards/access-token.guard';
 import { UserID } from '../common/types/userid.types';
+import { InsertResult } from 'typeorm';
 
 @Controller('recipes')
 export class RecipesController {
     constructor(private recipesService: RecipesService) {}
 
     @Post('/get-by-nutrients')
-    @Redirect('/notfound', 404)
     @UseGuards(AccessTokenGuard)
     async getByNutrients(@Body() recipeNutrientsDTO: RecipeNutrientsDTO) {
         return await this.recipesService.getByNutrients(recipeNutrientsDTO);
@@ -36,12 +34,19 @@ export class RecipesController {
         return await this.recipesService.getByIngredients(recipeIngredientsDTO);
     }
 
+    @Get('/saved')
+    @UseGuards(AccessTokenGuard)
+    async getSavedRecipes(@Req() req: Request) {
+        const { userId } = req.user! as { userId: UserID };
+        return await this.recipesService.getSavedRecipes(userId);
+    }
+
     @Post('/save/:id')
     @UseGuards(AccessTokenGuard)
     async saveRecipe(
         @Param('id', ParseIntPipe) recipeID: number,
         @Req() req: Request
-    ): Promise<UserRecipes> {
+    ): Promise<InsertResult> {
         const { userId } = req.user! as { userId: UserID };
         return await this.recipesService.saveRecipe(recipeID, userId);
     }

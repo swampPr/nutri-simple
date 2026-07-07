@@ -1,4 +1,4 @@
-import { showErrMsg } from '../common/utils/set-error';
+import { showErrMsg } from '../common/utils/set-error.js';
 const toggleBtn = document.getElementById('toggle-password');
 const passwordInput = document.getElementById('password');
 const toggleIcon = toggleBtn?.querySelector('.material-symbols-rounded') ?? null;
@@ -14,6 +14,7 @@ form?.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
+            method: 'POST',
             body: JSON.stringify({
                 userName: formData.get('userName'),
                 password: formData.get('password'),

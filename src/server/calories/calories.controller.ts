@@ -1,4 +1,4 @@
-import { Body, Controller, Get, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { CaloriesService } from './calories.service';
 import { CaloriesDTO } from './dto/calories.dto';
 import type { Request } from 'express';
@@ -18,7 +18,7 @@ export class CaloriesController {
 
     @Get('/get')
     @UseGuards(AccessTokenGuard)
-    async getUserCalories(@Req() req: Request, @Query('days', ParseIntPipe) numOfDays: number) {
+    async getUserCalories(@Req() req: Request, @Query('days') numOfDays: number) {
         const { userId } = req.user! as { userId: UserID };
         return this.caloriesService.getUserCalories(userId, numOfDays);
     }

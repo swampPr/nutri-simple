@@ -2,9 +2,10 @@ import { IsLatitude, IsLongitude, IsNotEmpty, IsOptional, IsString } from 'class
 import type { Latitude, Longitude } from 'src/server/common/types/geo.types';
 
 export class LocationDTO {
+    @IsOptional()
     @IsNotEmpty()
     @IsString()
-    state: string;
+    state?: string;
 
     @IsNotEmpty()
     @IsString()

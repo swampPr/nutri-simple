@@ -50,11 +50,10 @@ body {
     --text-high: #e5e8da;
     --text-low: #a2a695;
     --accent-warm: #ffb680;
+    --accent-blue: #7cc4ea;
     --error: #ffb4ab;
-
     --radius-lg: 28px;
     --radius-sm: 6px;
-
     --font-display: 'Lexend', sans-serif;
     --font-body: 'Roboto Flex', sans-serif;
 }
@@ -91,4 +90,83 @@ header h2 {
     letter-spacing: 0.2px;
     margin: 0;
     color: var(--text-high);
+}
+
+/* ---------- Calorie action buttons ---------- */
+.calorie-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.calorie-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1 1 160px;
+    padding: 10px 16px;
+    border: 1px solid var(--outline);
+    border-radius: 100px;
+    background: var(--surface-high);
+    color: var(--text-high);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.calorie-action-btn .material-symbols-rounded {
+    font-size: 18px;
+    color: var(--accent-warm);
+    transition: color 0.2s ease;
+}
+
+.calorie-action-btn:hover {
+    background: var(--accent-warm);
+    color: var(--on-primary);
+    border-color: var(--accent-warm);
+}
+
+.calorie-action-btn:hover .material-symbols-rounded {
+    color: var(--on-primary);
+}
+
+.calorie-action-btn:focus-visible {
+    outline: 2px solid var(--accent-warm);
+    outline-offset: 2px;
+}
+
+.calorie-action-btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Filled/primary variant — for the more "important" action */
+.calorie-action-btn--primary {
+    background: var(--accent-warm);
+    color: var(--on-primary);
+    border-color: var(--accent-warm);
+}
+
+.calorie-action-btn--primary .material-symbols-rounded {
+    color: var(--on-primary);
+}
+
+.calorie-action-btn--primary:hover {
+    background: transparent;
+    color: var(--text-high);
+}
+
+.calorie-action-btn--primary:hover .material-symbols-rounded {
+    color: var(--accent-warm);
+}
+
+/* Native `hidden` attribute needs to win over the flex display above */
+.calorie-action-btn[hidden],
+.calorie-actions[hidden] {
+    display: none;
 }

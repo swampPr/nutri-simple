@@ -7,7 +7,8 @@ export type LocationResponse = {
 export type Location = {
     properties: {
         country: string;
-        state: string;
+        state?: string;
+        formatted: string;
         city?: string;
         lon: Longitude;
         lat: Latitude;
