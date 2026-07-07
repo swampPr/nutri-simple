@@ -87,6 +87,15 @@ export class WeatherService {
     }
 
     getRunningScore(userForecast: UserForecastDTO) {
+        const alerts = userForecast.alerts;
+        if (alerts.length !== 0) {
+            const severeCondition = alerts.filter(
+                (alert) => alert.severity === 'Extreme' || alert.severity === 'Severe'
+            );
+
+            if (severeCondition.length !== 0) return 0;
+        }
+
         const weatherScoringObj: WeatherScoringObj = {
             feelsLike: (t) => {
                 if (t >= 10 && t <= 18) return 1.0;

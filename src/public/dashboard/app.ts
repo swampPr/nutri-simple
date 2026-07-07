@@ -268,7 +268,7 @@ function renderWeather(userForecast: UserForecast) {
                 <span>${score}</span><small>/10</small>
             </div>
         </div>
-        <p class="running-score-caption">${getScoreCaption(tone)}</p>
+        <p class="running-score-caption">${userForecast.alerts ? 'Adverse weather expected or occurring. Stay safe' : getScoreCaption(tone)}</p>
     </div>
 `;
     const stats = document.createElement('div');
