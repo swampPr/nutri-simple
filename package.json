@@ -7,6 +7,7 @@
     "license": "UNLICENSED",
     "scripts": {
         "build": "nest build",
+        "build:front": "npx tsc -p ./src/public/tsconfig.json --watch",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "nest start",
         "start:dev": "nest start --watch",

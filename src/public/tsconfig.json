@@ -7,6 +7,6 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/public/**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": ["src/server", "test", "dist"]
 }
