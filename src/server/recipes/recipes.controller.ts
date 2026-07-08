@@ -41,6 +41,12 @@ export class RecipesController {
         return await this.recipesService.getSavedRecipes(userId);
     }
 
+    @Get('/instructions/:id')
+    @UseGuards(AccessTokenGuard)
+    async getRecipeInstructions(@Param('id', ParseIntPipe) recipeId: number) {
+        return await this.recipesService.getRecipeInstructions(recipeId);
+    }
+
     @Post('/save/:id')
     @UseGuards(AccessTokenGuard)
     async saveRecipe(

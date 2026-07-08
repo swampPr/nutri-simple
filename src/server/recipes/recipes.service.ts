@@ -13,6 +13,13 @@ import { UserRecipeNutrientsDTO } from './dto/user-nutrient-recipes.dto';
 import { RecipeAutocompleteDTO, RecipeAutocompleteItem } from './dto/recipe-autocomplete.dto';
 import { RecipeSearchDTO } from './dto/recipe-search.dto';
 import { UserID } from '../common/types/userid.types';
+import {
+    ExtendedStep,
+    RecipeStepsAndEquipment,
+    RecipeStepsAndEquipmentDTO,
+    StepData,
+} from './dto/recipe-steps-equipment.dto';
+import { RecipeInstructionsDTO } from './dto/recipe-instructions.dto';
 
 @Injectable()
 export class RecipesService {
@@ -124,6 +131,55 @@ export class RecipesService {
         );
     }
 
+    async getRecipeInstructions(recipeId: number) {
+        const [recipeInfo, stepsAndEquipment] = await Promise.all([
+            this.getRecipeInfo(recipeId),
+            this.getRecipeStepsAndEquipment(recipeId),
+        ]);
+
+        const recipeInstructionsDTO: RecipeInstructionsDTO = {
+            recipeInfo,
+            stepsAndEquipment: stepsAndEquipment.data,
+        };
+
+        return recipeInstructionsDTO;
+    }
+
+    async getRecipeStepsAndEquipment(recipeId: number): Promise<RecipeStepsAndEquipmentDTO> {
+        const url = createSpoonURL(
+            `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions`
+        );
+
+        const res = await fetch(url, {
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+        const responseJson: any = await res.json();
+
+        const recipeStepsAndEquipmentDTO: RecipeStepsAndEquipmentDTO = {
+            data: {
+                stepData: [],
+                equipment: [],
+            },
+        };
+
+        for (let i = 0; i < responseJson.length; i++) {
+            const currStep: ExtendedStep[] = responseJson[i].steps as ExtendedStep[];
+            const stepData: StepData = {
+                name: responseJson[i].name,
+                steps: [],
+            };
+            for (let j = 0; j < currStep.length; j++) {
+                stepData.steps.push({ number: currStep[j].number, step: currStep[j].step });
+                recipeStepsAndEquipmentDTO.data.equipment.push(...currStep[j].equipment);
+            }
+            recipeStepsAndEquipmentDTO.data.stepData.push(stepData);
+        }
+
+        return recipeStepsAndEquipmentDTO;
+    }
+
     async getRecipeInfo(recipeID: number): Promise<SavedRecipe> {
         const url = createSpoonURL(`https://api.spoonacular.com/recipes/${recipeID}/information`);
         url.searchParams.set('includeNutrition', 'true');
@@ -136,6 +192,25 @@ export class RecipesService {
         if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const recipeResponseObj = (await response.json()) as RecipeInfoResponse;
+        const relevantNutrientNames: string[] = [
+            'Calories',
+            'Fat',
+            'Carbohydrates',
+            'Cholesterol',
+            'Sodium',
+            'Protein',
+            'Vitamin C',
+            'Vitamin K',
+            'Fiber',
+            'Vitamin B6',
+            'Vitamin B5',
+            'Vitamin B3',
+            'Vitamin B1',
+            'Vitamin E',
+            'Vitamin B2',
+            'Vitamin A',
+            'Vitamin B12',
+        ];
 
         const recipeInfo: SavedRecipe = {
             id: recipeResponseObj.id,
@@ -166,7 +241,17 @@ export class RecipesService {
                     },
                 };
             }),
-            nutrition: recipeResponseObj.nutrition,
+            nutrition: {
+                nutrients: recipeResponseObj.nutrition.nutrients.filter((nutrient) =>
+                    relevantNutrientNames.includes(nutrient.name)
+                ),
+
+                caloricBreakdown: {
+                    percentCarbs: recipeResponseObj.nutrition.caloricBreakdown.percentCarbs,
+                    percentProtein: recipeResponseObj.nutrition.caloricBreakdown.percentProtein,
+                    percentFat: recipeResponseObj.nutrition.caloricBreakdown.percentFat,
+                },
+            },
         };
 
         return recipeInfo;
