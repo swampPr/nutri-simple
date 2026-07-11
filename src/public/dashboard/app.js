@@ -164,6 +164,7 @@ function formatAlertTime(unixSeconds) {
     });
 }
 function renderWeatherAlerts(alerts) {
+    console.log(alerts);
     const container = document.getElementById('weather-alerts');
     const list = document.getElementById('weather-alerts-list');
     if (!container || !list)
@@ -225,7 +226,7 @@ function renderWeather(userForecast) {
                 <span>${score}</span><small>/10</small>
             </div>
         </div>
-        <p class="running-score-caption">${userForecast.alerts ? 'Adverse weather expected or occurring. Stay safe' : getScoreCaption(tone)}</p>
+        <p class="running-score-caption">${userForecast.alerts.length > 0 ? 'Adverse weather expected or occurring. Stay safe' : getScoreCaption(tone)}</p>
     </div>
 `;
     const stats = document.createElement('div');

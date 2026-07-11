@@ -1,5 +1,4 @@
 import { showErrMsg } from '../../common/utils/set-error.js';
-//TODO: I think it's done but just make sure.
 const recipeTitle = document.querySelector('[data-recipe-title]');
 let accessToken = null;
 const searchParams = new URLSearchParams(window.location.search);
