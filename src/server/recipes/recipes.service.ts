@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { RecipeNutrientsDTO } from './dto/recipe-nutrients.dto';
 import { RecipeInfoResponse } from './types/recipe.type';
 import { formatShoppingList } from './utils/shopping-list-util';
@@ -15,15 +15,19 @@ import { RecipeSearchDTO } from './dto/recipe-search.dto';
 import { UserID } from '../common/types/userid.types';
 import {
     ExtendedStep,
-    RecipeStepsAndEquipment,
     RecipeStepsAndEquipmentDTO,
     StepData,
 } from './dto/recipe-steps-equipment.dto';
 import { RecipeInstructionsDTO } from './dto/recipe-instructions.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 
 @Injectable()
 export class RecipesService {
-    constructor(@InjectRepository(UserRecipes) private userRecipesRepo: Repository<UserRecipes>) {}
+    constructor(
+        @InjectRepository(UserRecipes) private userRecipesRepo: Repository<UserRecipes>,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache
+    ) {}
 
     async getRecipeAutocomplete(q: string): Promise<RecipeAutocompleteDTO> {
         const url = createSpoonURL('https://api.spoonacular.com/recipes/autocomplete');
@@ -146,6 +150,11 @@ export class RecipesService {
     }
 
     async getRecipeStepsAndEquipment(recipeId: number): Promise<RecipeStepsAndEquipmentDTO> {
+        const cacheKey = `recipe-steps-equip:${recipeId}`;
+        const recipeCache: RecipeStepsAndEquipmentDTO | undefined =
+            await this.cacheManager.get(cacheKey);
+        if (recipeCache) return recipeCache;
+
         const url = createSpoonURL(
             `https://api.spoonacular.com/recipes/${recipeId}/analyzedInstructions`
         );
@@ -177,10 +186,16 @@ export class RecipesService {
             recipeStepsAndEquipmentDTO.data.stepData.push(stepData);
         }
 
+        await this.cacheManager.set(cacheKey, recipeStepsAndEquipmentDTO);
+
         return recipeStepsAndEquipmentDTO;
     }
 
     async getRecipeInfo(recipeID: number): Promise<SavedRecipe> {
+        const cacheKey = `recipe-info:${recipeID}`;
+        const recipeCache: SavedRecipe | undefined = await this.cacheManager.get(cacheKey);
+        if (recipeCache) return recipeCache;
+
         const url = createSpoonURL(`https://api.spoonacular.com/recipes/${recipeID}/information`);
         url.searchParams.set('includeNutrition', 'true');
 
@@ -253,6 +268,8 @@ export class RecipesService {
                 },
             },
         };
+
+        await this.cacheManager.set(cacheKey, recipeInfo);
 
         return recipeInfo;
     }

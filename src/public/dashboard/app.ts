@@ -553,7 +553,7 @@ function renderSavedRecipes(userRecipes: UserRecipes) {
                         ${recipe.servings} ${recipe.servings === 1 ? 'serving' : 'servings'}
                     </span>
                 </div>
-                <a class="recipe-source-link" href="${recipe.sourceUrl}" target="_blank" rel="noopener noreferrer">
+                <a class="recipe-source-link" href="/recipe/view?id=${recipe.id}" target="_blank">
                     <span class="material-symbols-rounded">open_in_new</span>
                     View full recipe
                 </a>

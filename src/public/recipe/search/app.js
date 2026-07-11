@@ -80,6 +80,13 @@ grid?.addEventListener('click', async (e) => {
     if (savedIcon)
         savedIcon.hidden = false;
 });
+grid?.addEventListener('click', async (e) => {
+    const viewBtn = e.target.closest('.recipe-card__btn--view');
+    const recipeId = viewBtn.dataset.recipeId;
+    if (!recipeId)
+        return;
+    window.open(`/recipe/view?id=${recipeId}`, '__blank');
+});
 function renderRecipeSearch(recipesResults) {
     if (!grid)
         return;

@@ -79,6 +79,15 @@ grid?.addEventListener('click', async (e) => {
     if (savedIcon) savedIcon.hidden = false;
 });
 
+grid?.addEventListener('click', async (e) => {
+    const viewBtn = (e.target as HTMLElement).closest(
+        '.recipe-card__btn--view'
+    ) as HTMLButtonElement;
+    const recipeId: string | undefined = viewBtn.dataset.recipeId;
+    if (!recipeId) return;
+    window.open(`/recipe/view?id=${recipeId}`, '__blank');
+});
+
 function renderRecipeSearch(recipesResults: RecipeResults) {
     if (!grid) return;
 
