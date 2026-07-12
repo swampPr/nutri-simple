@@ -1,0 +1,581 @@
+/* ====================================================
+   NutriSimple — /recipe/nutrient-search
+   Loaded after shared.css only. Self-contained: app
+   shell (sidebar + content), the nutrient filter form,
+   the results region, and the recipe-card look.
+==================================================== */
+
+/* ---------- App shell ---------- */
+.layout {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    flex-shrink: 0;
+    width: 248px;
+    background: var(--surface);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 20px 12px;
+}
+
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 100px;
+    color: var(--text-low);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar a .material-symbols-rounded {
+    font-size: 20px;
+}
+
+.sidebar a:hover {
+    background: var(--surface-high);
+    color: var(--text-high);
+}
+
+.sidebar a.active {
+    background: var(--primary);
+    color: var(--on-primary);
+    font-weight: 600;
+}
+
+.sidebar a.active .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 20;
+}
+
+.sidebar a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.sidebar-logout {
+    margin-top: 10%;
+}
+
+.sidebar-logout:hover {
+    border-color: #e9584e;
+}
+
+/* ---------- Content column ---------- */
+.content {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* ---------- Page wrapper ---------- */
+.nutrient-search-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px 40px 40px;
+}
+
+/* ---------- Filter panel ---------- */
+.nutrient-filters {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.nutrient-filters__intro h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 6px;
+    color: var(--text-high);
+}
+
+.content-subtitle {
+    margin: 0;
+    color: var(--text-low);
+    font-size: 14px;
+}
+
+/* ---------- Nutrient grid ---------- */
+.nutrient-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.nutrient-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--surface-high);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+}
+
+.nutrient-field__label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-high);
+}
+
+.nutrient-field__label .material-symbols-rounded {
+    font-size: 18px;
+    color: var(--primary);
+}
+
+.nutrient-field__inputs {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.nutrient-input {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nutrient-input__tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-low);
+}
+
+.nutrient-input input[type='number'] {
+    width: 100%;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--text-high);
+    font-family: var(--font-body);
+    font-size: 13px;
+}
+
+.nutrient-input input[type='number']::placeholder {
+    color: var(--text-low);
+}
+
+.nutrient-input input[type='number']:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Hide native number spinners — the pill/card look doesn't want them */
+.nutrient-input input[type='number']::-webkit-outer-spin-button,
+.nutrient-input input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.nutrient-input input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.nutrient-field__sep {
+    padding-bottom: 9px;
+    color: var(--text-low);
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.nutrient-field__unit {
+    padding-bottom: 9px;
+    color: var(--text-low);
+    font-size: 11px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+/* ---------- Randomize toggle ---------- */
+.nutrient-toggle {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--outline);
+}
+
+.toggle {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.toggle input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.toggle__track {
+    width: 44px;
+    height: 26px;
+    border-radius: 100px;
+    background: var(--surface-high);
+    border: 1px solid var(--outline);
+    position: relative;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.toggle__thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--text-low);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.toggle input:checked + .toggle__track {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.toggle input:checked + .toggle__track .toggle__thumb {
+    transform: translateX(18px);
+    background: var(--on-primary);
+}
+
+.toggle input:focus-visible + .toggle__track {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.nutrient-toggle__title {
+    display: block;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-high);
+    cursor: pointer;
+}
+
+.nutrient-toggle__hint {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: var(--text-low);
+}
+
+/* ---------- Form actions ---------- */
+.nutrient-form__actions {
+    margin-top: 24px;
+}
+
+/* ---------- Results region ---------- */
+.results {
+    flex: 1;
+}
+
+.results-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 64px 20px;
+    color: var(--text-low);
+}
+
+.results-state[hidden] {
+    display: none;
+}
+
+.results-state__icon {
+    font-size: 56px;
+    color: var(--outline);
+    margin-bottom: 6px;
+}
+
+.results-state__icon--spin {
+    color: var(--primary);
+    animation: results-spin 1s linear infinite;
+}
+
+@keyframes results-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.results-state__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-high);
+}
+
+.results-state__hint {
+    margin: 0;
+    font-size: 14px;
+    max-width: 340px;
+}
+
+/* ---------- Results grid ---------- */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+}
+
+.results-grid[hidden] {
+    display: none;
+}
+
+/* ---------- Recipe card (built at runtime) ---------- */
+.recipe-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.recipe-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.recipe-card__media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--surface-high);
+}
+
+.recipe-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.recipe-card__time {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    color: var(--text-high);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.recipe-card__time .material-symbols-rounded {
+    font-size: 15px;
+    color: var(--accent-warm);
+}
+
+.recipe-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 18px 16px 16px;
+    flex: 1;
+}
+
+.recipe-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--text-high);
+}
+
+.recipe-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-low);
+}
+
+.recipe-card__meta .material-symbols-rounded {
+    font-size: 16px;
+}
+
+.recipe-card__actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.recipe-card__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex: 1;
+    padding: 9px 12px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.recipe-card__btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.recipe-card__btn--save {
+    flex: 0 0 auto;
+    width: 42px;
+    padding: 9px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: 1px solid var(--primary);
+}
+
+.recipe-card__btn--save:hover {
+    background: transparent;
+    color: var(--primary);
+}
+
+.recipe-card__btn--saved {
+    background: var(--surface-high);
+    color: var(--text-low);
+    border-color: var(--outline);
+    pointer-events: none;
+}
+
+.recipe-card__btn--view {
+    background: transparent;
+    color: var(--text-high);
+    border: 1px solid var(--outline);
+}
+
+.recipe-card__btn--view:hover {
+    background: var(--surface-high);
+    border-color: var(--text-low);
+}
+
+/* Save button icon states — only one of these two icons is ever visible */
+.recipe-card__save-icon--saved[hidden],
+.recipe-card__save-icon--default[hidden] {
+    display: none;
+}
+
+.recipe-card__btn--save:has(.recipe-card__save-icon--saved:not([hidden])) {
+    background: var(--surface-high);
+    color: var(--text-high);
+    border-color: var(--outline);
+}
+
+.recipe-card__btn--save:has(.recipe-card__save-icon--saved:not([hidden])):hover {
+    background: var(--surface-high);
+    color: var(--text-high);
+}
+
+.recipe-card__save-icon--saved {
+    color: var(--primary);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+    .layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .sidebar ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .sidebar a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    .sidebar-logout {
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 520px) {
+    .nutrient-search-page {
+        padding: 16px 16px 32px;
+    }
+    .nutrient-filters {
+        padding: 18px;
+    }
+    .nutrient-field__inputs {
+        flex-wrap: wrap;
+    }
+    .nutrient-field__sep {
+        display: none;
+    }
+    .results-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+}
+
+#main-error {
+    position: absolute;
+    top: 3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#main-error {
+    color: #ff1200;
+}
+
+
+#main-error:empty {
+    display: none;
+}
+

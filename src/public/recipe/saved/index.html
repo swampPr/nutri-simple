@@ -3,9 +3,128 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <script src="/recipe/saved/app.js" type="module" defer></script>
+        <link rel="stylesheet" href="/common/styles/shared.css" />
+        <link rel="stylesheet" href="/recipe/saved/style.css" />
+        <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
         <title>Saved Recipes · NutriSimple</title>
     </head>
     <body>
-        <h1>SAVED RECIPES</h1>
+        <header>
+            <span class="material-symbols-rounded header-icon">bookmarks</span>
+            <h2>Saved Recipes</h2>
+            <h3 id="main-error" role="alert"></h3>
+        </header>
+
+        <div class="layout">
+            <nav class="sidebar">
+                <ul>
+                    <li>
+                        <a href="/dashboard">
+                            <span class="material-symbols-rounded">space_dashboard</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/search">
+                            <span class="material-symbols-rounded">search</span>
+                            Search Recipes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/saved" class="active">
+                            <span class="material-symbols-rounded">bookmarks</span>
+                            Saved Recipes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/by-nutrients">
+                            <span class="material-symbols-rounded">fork_chart</span>
+                            Search by Nutrients
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/by-ingredients">
+                            <span class="material-symbols-rounded">nutrition</span>
+                            Search by Ingredients
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/calories/track">
+                            <span class="material-symbols-rounded">local_fire_department</span>
+                            Track Calories
+                        </a>
+                    </li>
+                    <li class="sidebar-logout">
+                        <a href="/login" id="logout-link">
+                            <span class="material-symbols-rounded" aria-hidden="true">logout</span>
+                            Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="content">
+                <div class="content-intro">
+                    <h1>Your saved recipes</h1>
+                    <p class="content-subtitle">
+                        Everything you've bookmarked, ready when you need it.
+                    </p>
+                </div>
+
+                <!-- JS renders one <li class="recipe-card"> per saved recipe into this list,
+                     cloned from #recipe-card-template below. -->
+                <ul class="recipe-grid" id="recipe-grid"></ul>
+
+                <!-- Shown by JS (remove the `hidden` attribute) when the user has no saved recipes -->
+                <div class="empty-state" id="empty-state" hidden>
+                    <span class="material-symbols-rounded empty-state-icon">no_meals</span>
+                    <h3>No saved recipes yet</h3>
+                    <p>Recipes you bookmark will show up here.</p>
+                    <a href="/recipe/search" class="card-btn card-btn--primary">
+                        <span class="material-symbols-rounded">search</span>
+                        Find recipes
+                    </a>
+                </div>
+            </main>
+        </div>
+
+        <!-- Template for a single saved-recipe card. Clone this per recipe and fill in the data-fields. -->
+        <template id="recipe-card-template">
+            <li class="recipe-card" data-recipe-id="">
+                <div class="recipe-card-media">
+                    <img class="recipe-card-img" src="" alt="" loading="lazy" />
+                </div>
+                <div class="recipe-card-body">
+                    <h3 class="recipe-card-title" data-field="title"></h3>
+                    <div class="recipe-card-meta">
+                        <span class="meta-chip">
+                            <span class="material-symbols-rounded">schedule</span>
+                            <span data-field="readyInMinutes"></span>&nbsp;min
+                        </span>
+                        <span class="meta-chip">
+                            <span class="material-symbols-rounded">groups</span>
+                            <span data-field="servings"></span>&nbsp;servings
+                        </span>
+                    </div>
+                    <div class="recipe-card-actions">
+                        <a class="card-btn card-btn--primary" href="" data-action="view">
+                            <span class="material-symbols-rounded">visibility</span>
+                            View recipe
+                        </a>
+                        <button
+                            class="card-btn card-btn--outline"
+                            type="button"
+                            data-action="unsave">
+                            <span class="material-symbols-rounded">bookmark_remove</span>
+                            Unsave
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </template>
     </body>
 </html>

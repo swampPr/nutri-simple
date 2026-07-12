@@ -135,6 +135,13 @@ export class RecipesService {
         );
     }
 
+    async unsaveRecipe(id: UserID, recipeId: number) {
+        return await this.userRecipesRepo.delete({
+            recipeId,
+            user: { id },
+        });
+    }
+
     async getRecipeInstructions(recipeId: number) {
         const [recipeInfo, stepsAndEquipment] = await Promise.all([
             this.getRecipeInfo(recipeId),

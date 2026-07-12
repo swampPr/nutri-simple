@@ -57,6 +57,13 @@ export class RecipesController {
         return await this.recipesService.saveRecipe(recipeID, userId);
     }
 
+    @Post('/unsave/:id')
+    @UseGuards(AccessTokenGuard)
+    async unsaveRecipe(@Param('id', ParseIntPipe) recipeId: number, @Req() req: Request) {
+        const { userId } = req.user! as { userId: UserID };
+        return await this.recipesService.unsaveRecipe(userId, recipeId);
+    }
+
     @Post('/shopping-list/generate')
     @UseGuards(AccessTokenGuard)
     async generateShoppingList(@Body('recipeIds', ParseArrayPipe) recipeIds: number[]) {

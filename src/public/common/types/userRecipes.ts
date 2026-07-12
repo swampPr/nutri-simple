@@ -1,4 +1,4 @@
-type SavedRecipe = {
+export type SavedRecipe = {
     id: number;
     title: string;
     servings: number;

@@ -1,0 +1,297 @@
+/* ====================================================
+   NutriSimple — Saved Recipes page
+   Loaded after /common/styles/shared.css.
+   Provides: app shell (sidebar + content), the sidebar's
+   own look, and the saved-recipe card grid.
+==================================================== */
+
+/* ---------- App shell ---------- */
+.layout {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    flex: 0 0 248px;
+    background: var(--surface);
+    border-right: 1px solid var(--outline);
+    padding: 16px 12px;
+    align-self: stretch;
+}
+.sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 100px;
+    color: var(--text-low);
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.sidebar a .material-symbols-rounded {
+    font-size: 20px;
+}
+.sidebar a:hover {
+    background: var(--surface-high);
+    color: var(--text-high);
+}
+.sidebar a.active {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+.sidebar a.active .material-symbols-rounded {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.sidebar-logout {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid var(--outline);
+}
+
+/* ---------- Content column ---------- */
+.content {
+    flex: 1;
+    min-width: 0;
+    padding: 32px 40px 56px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.content-intro {
+    margin-bottom: 28px;
+}
+.content-intro h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 6px;
+    color: var(--text-high);
+}
+.content-subtitle {
+    margin: 0;
+    color: var(--text-low);
+    font-size: 14px;
+}
+
+/* ---------- Recipe grid ---------- */
+.recipe-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+.recipe-grid:empty {
+    display: none;
+}
+
+/* ---------- Recipe card ---------- */
+.recipe-card {
+    background: var(--surface);
+    border: 1px solid var(--outline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.recipe-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.recipe-card-media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--surface-high);
+}
+.recipe-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.recipe-card-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+.recipe-card-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--text-high);
+    /* clamp to two lines so uneven titles don't wreck the grid */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.recipe-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 100px;
+    background: var(--surface-high);
+    color: var(--text-low);
+    font-size: 12px;
+    font-weight: 500;
+}
+.meta-chip .material-symbols-rounded {
+    font-size: 15px;
+    color: var(--accent-blue);
+}
+
+.recipe-card-actions {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--outline);
+    background: var(--surface-high);
+    color: var(--text-high);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.card-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+.card-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.card-btn--primary {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: var(--primary);
+}
+.card-btn--primary:hover {
+    background: transparent;
+    color: var(--primary);
+}
+
+.card-btn--outline:hover {
+    background: var(--error);
+    color: var(--on-primary);
+    border-color: var(--error);
+}
+.card-btn--outline .material-symbols-rounded {
+    color: var(--error);
+    transition: color 0.2s ease;
+}
+.card-btn--outline:hover .material-symbols-rounded {
+    color: var(--on-primary);
+}
+
+/* ---------- Empty state ---------- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 64px 24px;
+    border: 1px dashed var(--outline);
+    border-radius: var(--radius-lg);
+    color: var(--text-low);
+}
+.empty-state[hidden] {
+    display: none;
+}
+.empty-state-icon {
+    font-size: 40px;
+    color: var(--text-low);
+    margin-bottom: 8px;
+}
+.empty-state h3 {
+    font-family: var(--font-display);
+    color: var(--text-high);
+    margin: 0;
+    font-size: 18px;
+}
+.empty-state p {
+    margin: 0 0 12px;
+    font-size: 14px;
+}
+.empty-state .card-btn {
+    width: auto;
+    padding: 10px 24px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+    .layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--outline);
+    }
+    .sidebar ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .sidebar a span:last-child {
+        display: none;
+    }
+    .sidebar-logout {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        margin-left: auto;
+    }
+    .content {
+        padding: 24px 20px 40px;
+    }
+}
+
+@media (max-width: 420px) {
+    .recipe-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+#main-error{
+    color: #FF4538;
+}
+

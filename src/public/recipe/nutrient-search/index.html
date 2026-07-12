@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Roboto+Flex:opsz,wght@8..144,400;8..144,500&display=swap"
+            rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+            rel="stylesheet" />
+        <script src="/recipe/nutrient-search/app.js" type="module" defer></script>
+        <link rel="stylesheet" href="/common/styles/shared.css" />
+        <link rel="stylesheet" href="/recipe/nutrient-search/style.css" />
+        <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+        <title>Nutrient Recipe Search · NutriSimple</title>
+    </head>
+    <body>
+        <header>
+            <span class="material-symbols-rounded header-icon">fork_chart</span>
+            <h3 id="main-error" role="alert"></h3>
+            <h2>Search by Nutrients</h2>
+        </header>
+
+        <div class="layout">
+            <nav class="sidebar">
+                <ul>
+                    <li>
+                        <a href="/dashboard">
+                            <span class="material-symbols-rounded">space_dashboard</span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/search">
+                            <span class="material-symbols-rounded">search</span>
+                            Search Recipes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/saved">
+                            <span class="material-symbols-rounded">bookmarks</span>
+                            Saved Recipes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/by-nutrients" class="active">
+                            <span class="material-symbols-rounded">fork_chart</span>
+                            Search by Nutrients
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/recipe/by-ingredients">
+                            <span class="material-symbols-rounded">nutrition</span>
+                            Search by Ingredients
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/calories/track">
+                            <span class="material-symbols-rounded">local_fire_department</span>
+                            Track Calories
+                        </a>
+                    </li>
+                    <li class="sidebar-logout">
+                        <a href="/login" id="logout-link">
+                            <span class="material-symbols-rounded" aria-hidden="true">logout</span>
+                            Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="content">
+                <main class="nutrient-search-page">
+                    <!-- Filter form — field names map 1:1 to RecipeNutrientsDTO -->
+                    <form id="nutrient-filter-form" class="nutrient-filters" novalidate>
+                        <div class="nutrient-filters__intro">
+                            <h1>Filter recipes by nutrients</h1>
+                            <p class="content-subtitle">
+                                Set a min, a max, or both for any nutrient. Leave a field blank to
+                                skip that limit.
+                            </p>
+                        </div>
+
+                        <div class="nutrient-grid">
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded"
+                                        >local_fire_department</span
+                                    >
+                                    <span>Calories</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minCalories"
+                                            min="35"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxCalories"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">kcal</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">egg</span>
+                                    <span>Protein</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minProtein"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxProtein"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">g</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">bakery_dining</span>
+                                    <span>Carbs</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minCarbs"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxCarbs"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">g</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">opacity</span>
+                                    <span>Fat</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minFat"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxFat"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">g</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">favorite</span>
+                                    <span>Cholesterol</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minCholesterol"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxCholesterol"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">mg</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">grass</span>
+                                    <span>Fiber</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minFiber"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxFiber"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">g</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">fitness_center</span>
+                                    <span>Iron</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minIron"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxIron"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">mg</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">grain</span>
+                                    <span>Sodium</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minSodium"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxSodium"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">mg</span>
+                                </div>
+                            </div>
+
+                            <div class="nutrient-field">
+                                <div class="nutrient-field__label">
+                                    <span class="material-symbols-rounded">icecream</span>
+                                    <span>Sugar</span>
+                                </div>
+                                <div class="nutrient-field__inputs">
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Min</span>
+                                        <input
+                                            type="number"
+                                            name="minSugar"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="0" />
+                                    </label>
+                                    <span class="nutrient-field__sep">–</span>
+                                    <label class="nutrient-input">
+                                        <span class="nutrient-input__tag">Max</span>
+                                        <input
+                                            type="number"
+                                            name="maxSugar"
+                                            min="0"
+                                            inputmode="numeric"
+                                            placeholder="Any" />
+                                    </label>
+                                    <span class="nutrient-field__unit">g</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nutrient-toggle">
+                            <label class="toggle">
+                                <input type="checkbox" name="random" id="random-toggle" />
+                                <span class="toggle__track"
+                                    ><span class="toggle__thumb"></span
+                                ></span>
+                            </label>
+                            <div>
+                                <label for="random-toggle" class="nutrient-toggle__title"
+                                    >Randomize order</label
+                                >
+                                <p class="nutrient-toggle__hint">
+                                    Shuffle results instead of sorting by relevance.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="nutrient-form__actions calorie-actions">
+                            <button
+                                id="nutrient-search"
+                                type="submit"
+                                class="calorie-action-btn calorie-action-btn--primary">
+                                <span class="material-symbols-rounded">search</span>
+                                Search recipes
+                            </button>
+                            <button
+                                type="reset"
+                                class="calorie-action-btn"
+                                id="nutrient-search-reset">
+                                <span class="material-symbols-rounded">restart_alt</span>
+                                Reset filters
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Results region — same markup/classes as /recipe/search so rendering logic can be reused -->
+                    <section class="results" aria-live="polite">
+                        <div id="results-empty" class="results-state">
+                            <span class="material-symbols-rounded results-state__icon"
+                                >fork_chart</span
+                            >
+                            <p class="results-state__title">Set your nutrient targets</p>
+                            <p class="results-state__hint">
+                                Fill in the filters above and search to see matching recipes.
+                            </p>
+                        </div>
+                        <div id="results-loading" class="results-state" hidden>
+                            <span
+                                class="material-symbols-rounded results-state__icon results-state__icon--spin"
+                                >progress_activity</span
+                            >
+                            <p class="results-state__title">Searching…</p>
+                        </div>
+                        <div id="results-none" class="results-state" hidden>
+                            <span class="material-symbols-rounded results-state__icon"
+                                >search_off</span
+                            >
+                            <p class="results-state__title">No recipes found</p>
+                            <p class="results-state__hint">
+                                Try widening one or more of your nutrient ranges.
+                            </p>
+                        </div>
+                        <div id="results-grid" class="results-grid" hidden></div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>
