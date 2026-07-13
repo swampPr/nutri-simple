@@ -1,4 +1,3 @@
-//TODO: Finish this page and make sure there are no bugs or possible misuses in the frontend
 import { AccessTokenResponse } from '../../common/types/accessToken';
 import { SavedRecipe } from '../../common/types/recipeInstructions';
 import { showErrMsg } from '../../common/utils/set-error.js';
@@ -91,6 +90,7 @@ function renderRecipes(userRecipes: Pick<SavedRecipe, 'id' | 'title' | 'image'>[
         card.dataset.recipeId = `${recipe.id}`;
 
         card.innerHTML = `
+
             <div class="recipe-card__media">
                 <img class="recipe-card__img" src="${recipe.image}" alt="${recipe.title}" loading="lazy" />
             </div>

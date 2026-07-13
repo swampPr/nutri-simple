@@ -78,6 +78,7 @@ function renderRecipes(userRecipes) {
         card.classList.add('recipe-card');
         card.dataset.recipeId = `${recipe.id}`;
         card.innerHTML = `
+
             <div class="recipe-card__media">
                 <img class="recipe-card__img" src="${recipe.image}" alt="${recipe.title}" loading="lazy" />
             </div>
