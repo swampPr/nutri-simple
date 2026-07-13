@@ -3,17 +3,10 @@
    Extends shared.css. Dark, olive/green Material-ish
    theme. Big sectioned checklist, sticky selection bar.
 ==================================================== */
-
-body {
-    padding-bottom: 88px; /* room for the sticky selection bar */
-}
-
 .ingredient-search {
     width: 100%;
-    max-width: 760px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 28px 24px 40px;
-    flex: 1;
 }
 
 /* ---------- Intro ---------- */
