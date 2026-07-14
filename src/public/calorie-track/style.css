@@ -1,0 +1,634 @@
+/* ====================================================
+   Calorie Track — page-specific styles
+   Loaded after shared.css. Sidebar, header, and the
+   .calorie-action-btn family already come from there.
+
+   NOTE: .calorie-field / .calorie-editor did NOT exist in
+   shared.css — that's why Add Food and Set Goal appeared to
+   "do nothing but vanish". They're defined here now.
+==================================================== */
+
+/* ---------- Page layout ---------- */
+.layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.content {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    padding: 32px 40px 48px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ---------- Sidebar tweaks matching dashboard ---------- */
+.sidebar-logout {
+    margin-top: 10%;
+}
+
+.sidebar-logout a {
+    border: 1px solid transparent;
+}
+
+.sidebar-logout:hover {
+    border-color: #e9584e;
+}
+
+/* ---------- Error slot ---------- */
+.error-msg {
+    margin: 0;
+    padding: 12px 18px;
+    border: 1px solid var(--error);
+    border-radius: 100px;
+    background: rgba(255, 180, 171, 0.08);
+    color: var(--error);
+    font-size: 13px;
+}
+
+.error-msg[hidden] {
+    display: none;
+}
+
+/* ---------- Card base ---------- */
+.card {
+    background: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+}
+
+/* ====================================================
+   Summary card — full-width banner.
+   Ring on the left, then a body column holding the day
+   label, the three stat pillars, and the actions. The
+   whole card reads as one control surface for whichever
+   day is selected.
+==================================================== */
+.summary-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 40px;
+    padding: 28px 32px;
+}
+
+.ring-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 176px;
+    height: 176px;
+}
+
+.progress-ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-ring-track {
+    fill: none;
+    stroke: var(--surface-high);
+    stroke-width: 12;
+}
+
+.progress-ring-fill {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 12;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.45s ease, stroke 0.3s ease;
+}
+
+/* app.ts sets data-status on .summary-card — same vocabulary
+   as the history bars, so the ring and the bar agree. */
+.summary-card[data-status='near'] .progress-ring-fill {
+    stroke: var(--accent-warm);
+}
+
+.summary-card[data-status='over'] .progress-ring-fill {
+    stroke: var(--error);
+}
+
+.ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-align: center;
+}
+
+.ring-value {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--text-high);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.ring-label {
+    font-size: 11px;
+    color: var(--text-low);
+}
+
+/* ---------- Summary body (right of the ring) ---------- */
+.summary-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.summary-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.summary-heading h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-high);
+}
+
+/* Small pill that restates the day's standing in words —
+   app.ts writes the text and mirrors data-status here. */
+.summary-badge {
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--outline);
+    background: var(--surface-high);
+    color: var(--text-low);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.summary-card[data-status='under'] .summary-badge {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.summary-card[data-status='near'] .summary-badge {
+    border-color: var(--accent-warm);
+    color: var(--accent-warm);
+}
+
+.summary-card[data-status='over'] .summary-badge {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+/* ---------- Stat pillars ---------- */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 0;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 22px;
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+
+.stat-label {
+    margin: 0;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-low);
+}
+
+.stat-value {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--text-high);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Remaining flips red once the day goes over goal */
+.stat-value[data-negative='true'] {
+    color: var(--error);
+}
+
+.stat-unit {
+    margin-left: 4px;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-low);
+}
+
+/* ====================================================
+   Calorie field / editor morph
+   The button and the input occupy the same slot; toggling
+   .is-editing on the wrapping .calorie-field swaps them.
+==================================================== */
+.calorie-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 0; /* shared.css sets 14px; card padding covers it */
+}
+
+.calorie-field {
+    position: relative;
+    flex: 1 1 170px;
+    display: flex;
+    min-width: 0;
+}
+
+.calorie-field .calorie-action-btn {
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.calorie-editor {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 16px;
+    border: 1px solid var(--accent-warm);
+    border-radius: 100px;
+    background: var(--surface-high);
+}
+
+.calorie-field.is-editing .calorie-action-btn {
+    display: none;
+}
+
+.calorie-field.is-editing .calorie-editor {
+    display: flex;
+    animation: editor-morph 0.18s ease-out;
+}
+
+@keyframes editor-morph {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.calorie-editor-icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--accent-warm);
+}
+
+.calorie-editor-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-high);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.calorie-editor-input::placeholder {
+    color: var(--text-low);
+}
+
+/* Kill the native number spinners — the step arrows look wrong in a pill */
+.calorie-editor-input::-webkit-outer-spin-button,
+.calorie-editor-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.calorie-editor-input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.calorie-editor-hint {
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--text-low);
+    white-space: nowrap;
+}
+
+/* ====================================================
+   History panel
+==================================================== */
+.history-panel {
+    padding: 22px 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.history-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.history-heading h3 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-high);
+}
+
+.history-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.history-legend li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-low);
+}
+
+.history-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.history-legend-dot--under {
+    background: var(--primary);
+}
+
+.history-legend-dot--near {
+    background: var(--accent-warm);
+}
+
+.history-legend-dot--over {
+    background: var(--error);
+}
+
+.history-legend-dot--empty {
+    background: transparent;
+    border: 1px dashed var(--outline);
+}
+
+/* ---------- Bars ---------- */
+.history-chart {
+    display: flex;
+}
+
+.history-bars {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.history-bar-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 6px 10px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--text-low);
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.history-bar-btn:hover {
+    background: var(--surface-high);
+}
+
+.history-bar-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.history-bar.active .history-bar-btn {
+    background: var(--surface-high);
+    border-color: var(--outline);
+}
+
+.history-bar-value {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-high);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Fixed-height track; the fill grows from the bottom and its
+   height is set inline by app.ts as
+   min(calories / calorieGoal, 1) * 100%. */
+.history-bar-track {
+    position: relative;
+    width: 100%;
+    height: 104px;
+    border-radius: 10px;
+    background: var(--surface-high);
+    overflow: hidden;
+}
+
+.history-bar-fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+    background: var(--text-low);
+    transition: height 0.45s ease, background 0.2s ease;
+}
+
+/* Status colors — app.ts sets data-status on the <li> after
+   computing calories / calorieGoal for that day. */
+.history-bar[data-status='under'] .history-bar-fill {
+    background: var(--primary);
+}
+
+.history-bar[data-status='near'] .history-bar-fill {
+    background: var(--accent-warm);
+}
+
+.history-bar[data-status='over'] .history-bar-fill {
+    background: var(--error);
+}
+
+/* No entry for that day at all — dashed empty track, no fill. */
+.history-bar[data-status='empty'] .history-bar-track {
+    background: transparent;
+    border: 1px dashed var(--outline);
+}
+
+.history-bar[data-status='empty'] .history-bar-value {
+    color: var(--text-low);
+    font-weight: 400;
+}
+
+.history-bar-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.history-bar-dow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--text-low);
+}
+
+.history-bar-daynum {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-high);
+}
+
+.history-bar.active .history-bar-dow,
+.history-bar.active .history-bar-daynum {
+    color: var(--primary);
+}
+
+/* ====================================================
+   Responsive
+==================================================== */
+@media (max-width: 1100px) {
+    .summary-card {
+        gap: 28px;
+        padding: 24px;
+    }
+
+    .ring-wrap {
+        width: 150px;
+        height: 150px;
+    }
+
+    .ring-value {
+        font-size: 32px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stat {
+        padding-left: 16px;
+    }
+}
+
+@media (max-width: 860px) {
+    .summary-card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 24px;
+    }
+
+    .summary-body {
+        width: 100%;
+    }
+
+    .summary-heading {
+        justify-content: center;
+    }
+
+    .stat {
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        padding: 20px 16px 40px;
+    }
+
+    .summary-card {
+        padding: 22px 18px;
+    }
+
+    .summary-stats {
+        gap: 8px;
+    }
+
+    .stat {
+        padding-left: 8px;
+    }
+
+    .stat-value {
+        font-size: 19px;
+    }
+
+    .stat-unit {
+        display: block;
+        margin-left: 0;
+    }
+
+    .calorie-field {
+        flex: 1 1 100%;
+    }
+
+    .history-panel {
+        padding: 18px 16px 20px;
+    }
+
+    .history-bars {
+        grid-template-columns: repeat(7, minmax(32px, 1fr));
+        gap: 4px;
+    }
+
+    .history-bar-btn {
+        padding: 8px 2px 6px;
+    }
+
+    .history-bar-track {
+        height: 72px;
+    }
+
+    .history-bar-dow {
+        display: none;
+    }
+}
