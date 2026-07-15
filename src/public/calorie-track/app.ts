@@ -2,6 +2,45 @@ import { AccessTokenResponse } from '../common/types/accessToken';
 import { showErrMsg } from '../common/utils/set-error.js';
 
 let accessToken: string | null = null;
+let historyData: CalorieHistoryEntry[] = [];
+let selectedDay = '';
+let todayIso = '';
+let busy = false;
+
+const DOW_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const FULL_DOW_LABELS = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+];
+const RING_CIRCUMFERENCE = 377;
+const DEFAULT_GOAL = 2000;
+
+const summaryCard = document.querySelector<HTMLElement>('.summary-card')!;
+const ringFill = document.getElementById('calorie-ring-fill')!;
+const caloriesConsumedEl = document.getElementById('calories-consumed')!;
+const goalInlineEl = document.getElementById('calorie-goal-inline')!;
+const dayLabelEl = document.getElementById('summary-day-label')!;
+const badgeEl = document.getElementById('summary-badge')!;
+const goalStatEl = document.getElementById('calorie-goal')!;
+const foodStatEl = document.getElementById('calories-food')!;
+const remainingStatEl = document.getElementById('calories-remaining')!;
+
+const addFoodField = document.getElementById('add-food-field') as HTMLElement;
+const addFoodBtn = document.getElementById('add-food-btn') as HTMLButtonElement;
+const addFoodInput = document.getElementById('add-food-input') as HTMLInputElement;
+
+const goalField = document.getElementById('goal-field') as HTMLElement;
+const setGoalBtn = document.getElementById('set-goal-btn') as HTMLButtonElement;
+const goalInput = document.getElementById('goal-input') as HTMLInputElement;
+
+const clearDayBtn = document.getElementById('clear-day-btn') as HTMLButtonElement;
+
+const historyBarsEl = document.getElementById('history-bars')!;
 
 interface CalorieHistoryEntry {
     calorieGoal: number;
@@ -92,46 +131,6 @@ async function tokenRefresh() {
     }
 }
 
-let historyData: CalorieHistoryEntry[] = [];
-let selectedDay = '';
-let todayIso = '';
-let busy = false;
-
-const DOW_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const FULL_DOW_LABELS = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-];
-const RING_CIRCUMFERENCE = 377;
-const DEFAULT_GOAL = 2000;
-
-const summaryCard = document.querySelector<HTMLElement>('.summary-card')!;
-const ringFill = document.getElementById('calorie-ring-fill')!;
-const caloriesConsumedEl = document.getElementById('calories-consumed')!;
-const goalInlineEl = document.getElementById('calorie-goal-inline')!;
-const dayLabelEl = document.getElementById('summary-day-label')!;
-const badgeEl = document.getElementById('summary-badge')!;
-const goalStatEl = document.getElementById('calorie-goal')!;
-const foodStatEl = document.getElementById('calories-food')!;
-const remainingStatEl = document.getElementById('calories-remaining')!;
-
-const addFoodField = document.getElementById('add-food-field') as HTMLElement;
-const addFoodBtn = document.getElementById('add-food-btn') as HTMLButtonElement;
-const addFoodInput = document.getElementById('add-food-input') as HTMLInputElement;
-
-const goalField = document.getElementById('goal-field') as HTMLElement;
-const setGoalBtn = document.getElementById('set-goal-btn') as HTMLButtonElement;
-const goalInput = document.getElementById('goal-input') as HTMLInputElement;
-
-const clearDayBtn = document.getElementById('clear-day-btn') as HTMLButtonElement;
-
-const historyBarsEl = document.getElementById('history-bars')!;
-
 function toIsoDate(d: Date): string {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -203,8 +202,6 @@ function renderHistoryBars() {
 
 function getFallbackGoal(): number {
     if (historyData.length === 0) return DEFAULT_GOAL;
-    // Latest known goal. No endpoint returns the goal standalone, so for a
-    // day with no logged row we fall back to the most recent one we've seen.
     return historyData[historyData.length - 1].calorieGoal;
 }
 
@@ -351,7 +348,7 @@ setGoalBtn.addEventListener('click', () => {
     openEditor(goalField, goalInput, String(current));
 });
 
-goalInput.addEventListener('keydown', (e) => {
+goalInput.addEventListener('keydown', async (e) => {
     if (e.key === 'Escape') {
         closeEditor(goalField);
         setGoalBtn.focus();
@@ -366,12 +363,12 @@ goalInput.addEventListener('keydown', (e) => {
     }
 
     closeEditor(goalField);
-    void mutate(() => changeCalorieGoal(goal));
+    await mutate(() => changeCalorieGoal(goal));
 });
 
 goalInput.addEventListener('blur', () => closeEditor(goalField));
 
-clearDayBtn.addEventListener('click', () => {
+clearDayBtn.addEventListener('click', async () => {
     const current = findEntry(todayIso)?.calories ?? 0;
     if (current === 0) {
         showErrMsg('main-error', 'Nothing logged today to clear.');
@@ -379,7 +376,7 @@ clearDayBtn.addEventListener('click', () => {
     }
     if (!window.confirm(`Clear today's ${fmt(current)} kcal? This can't be undone.`)) return;
 
-    void mutate(() => changeTodaysCalories(0));
+    await mutate(() => changeTodaysCalories(0));
 });
 
 tokenRefresh().then(() => refreshHistory());
