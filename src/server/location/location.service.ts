@@ -48,7 +48,16 @@ export class LocationService {
 
         const cacheKey = `location:${q}`;
         const locationCache: LocationDTO | undefined = await this.cacheManager.get(cacheKey);
-        if (locationCache) return locationCache;
+
+        if (locationCache) {
+            await this.usersService.updateUserLocation(
+                locationCache.lat,
+                locationCache.lon,
+                locationCache.displayName,
+                userId
+            );
+            return locationCache;
+        }
 
         const res = await fetch(url.toString(), {
             headers: {

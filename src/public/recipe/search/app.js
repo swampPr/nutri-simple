@@ -82,6 +82,8 @@ grid?.addEventListener('click', async (e) => {
 });
 grid?.addEventListener('click', async (e) => {
     const viewBtn = e.target.closest('.recipe-card__btn--view');
+    if (!viewBtn)
+        return;
     const recipeId = viewBtn.dataset.recipeId;
     if (!recipeId)
         return;

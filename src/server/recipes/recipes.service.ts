@@ -97,6 +97,7 @@ export class RecipesService {
                 Accept: 'application/json',
             },
         });
+
         if (response.status === 402) throw new HttpException('API Limit reached', 402);
 
         const userNutrientRecipes: UserRecipeNutrientsDTO = {

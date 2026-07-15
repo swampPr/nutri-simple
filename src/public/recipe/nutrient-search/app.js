@@ -102,7 +102,6 @@ function renderRecipes(userRecipes) {
     resultsGrid.hidden = false;
 }
 async function fetchRecipes(payload) {
-    console.log(payload);
     try {
         const res = await fetch('/recipes/get-by-nutrients', {
             headers: {
@@ -120,7 +119,6 @@ async function fetchRecipes(payload) {
             window.location.href = '/login';
         if (!res.ok)
             throw userRecipes;
-        console.log(userRecipes);
         return userRecipes;
     }
     catch (err) {

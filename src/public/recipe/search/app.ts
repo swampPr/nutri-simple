@@ -83,6 +83,7 @@ grid?.addEventListener('click', async (e) => {
     const viewBtn = (e.target as HTMLElement).closest(
         '.recipe-card__btn--view'
     ) as HTMLButtonElement;
+    if (!viewBtn) return;
     const recipeId: string | undefined = viewBtn.dataset.recipeId;
     if (!recipeId) return;
     window.open(`/recipe/view?id=${recipeId}`, '__blank');

@@ -164,7 +164,6 @@ function formatAlertTime(unixSeconds) {
     });
 }
 function renderWeatherAlerts(alerts) {
-    console.log(alerts);
     const container = document.getElementById('weather-alerts');
     const list = document.getElementById('weather-alerts-list');
     if (!container || !list)

@@ -117,8 +117,6 @@ function renderRecipes(userRecipes: Pick<SavedRecipe, 'id' | 'title' | 'image'>[
 }
 
 async function fetchRecipes(payload: Record<string, number | boolean>) {
-    console.log(payload);
-
     try {
         const res = await fetch('/recipes/get-by-nutrients', {
             headers: {
@@ -134,9 +132,6 @@ async function fetchRecipes(payload: Record<string, number | boolean>) {
             .recipes;
         if (res.status === 401) window.location.href = '/login';
         if (!res.ok) throw userRecipes;
-
-        console.log(userRecipes);
-
         return userRecipes;
     } catch (err: any) {
         showErrMsg('main-error', err.message);

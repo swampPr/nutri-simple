@@ -197,8 +197,6 @@ function formatAlertTime(unixSeconds: number): string {
 }
 
 function renderWeatherAlerts(alerts?: AlertItem[]) {
-    console.log(alerts);
-
     const container = document.getElementById('weather-alerts');
     const list = document.getElementById('weather-alerts-list');
     if (!container || !list) return;
